@@ -1,0 +1,58 @@
+{
+  "name": "josla-backend",
+  "version": "1.0.0",
+  "description": "A simple backend service to power the josla-frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint ./server",
+    "lint:fix": "./node_modules/.bin/eslint ./server --fix || true",
+    "build": "babel server --out-dir build",
+    "start": "node build/app.js",
+    "start:dev": "nodemon --exec babel-node server/app.js",
+    "heroku-postbuild": "rm -rf ./build/* && npm run build && npm run db-init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bastieno/Josla-Backend.git"
+  },
+  "keywords": [
+    "backend",
+    "api"
+  ],
+  "author": "Francis Nduamaka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bastieno/Josla-Backend/issues"
+  },
+  "homepage": "https://github.com/Bastieno/Josla-Backend#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.3",
+    "@babel/runtime": "^7.4.4",
+    "@cloudant/cloudant": "^4.2.1",
+    "body-parser": "^1.18.3",
+    "cloudinary": "^1.16.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.6-alpha.5",
+    "express-validator": "^5.3.1",
+    "fancy-log": "^1.3.3",
+    "helmet": "^3.18.0",
+    "morgan": "^1.9.1",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/register": "^7.4.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "nodemon": "^1.18.11"
+  }
+}
