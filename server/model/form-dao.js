@@ -1,10 +1,19 @@
 import log from 'fancy-log';
 import uuidv4 from 'uuid/v4';
+import sgMail from '@sendgrid/mail';
+import dotenv from 'dotenv';
 import dbCloudantConnect from '../utils/connection';
 import generateFileUrl from '../utils/generateFileUrl';
 
+dotenv.config();
+
+const { SENDGRID_API_KEY } = process.env;
+
 // Cloudant DB reference
 let db;
+
+// Setting Send grid api key
+sgMail.setApiKey(SENDGRID_API_KEY);
 
 // Initialize the DB when this module is loaded
 (function getDbConnection() {
@@ -136,6 +145,63 @@ export const subscribeBlog = requestBody => new Promise(async (resolve, reject) 
       email,
       whenCreated
     };
+
+    db.insert(formData, (err, result) => {
+      if (err) {
+        log(`Error occured: ${err.message}`);
+        reject(err);
+      } else {
+        resolve({ data: { createdId: result.id, createdRevId: result.rev }, statusCode: 201 });
+      }
+    });
+  } catch (error) {
+    reject(error);
+  }
+});
+
+export const submitContactForm = requestBody => new Promise(async (resolve, reject) => {
+  try {
+    const {
+      projectType,
+      projectBudget,
+      email,
+      companyName,
+      briefDescription
+    } = requestBody;
+
+    const message = `<span style="font-size: 15px; color: #2aa275; font-family: Roboto">You have a new message with the following details:</span>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto"><strong>Company Name:</strong> ${companyName}</p>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto"><strong>Email Address:</strong> ${email}</p>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto"><strong>Project Type:</strong> ${projectType.label}</p>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto"><strong>Project Budget:</strong> ${projectBudget.label}</p>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto"><strong>Brief Description:</strong> ${briefDescription}</p>
+        <p style="font-size: 15px; color: rgba(52, 61, 76, 0.8); font-family: Roboto">Please respond to this mail within the next 48 hours.</p>
+      `;
+
+    const mailOptions = {
+      to: 'francis.nduamaka@gmail.com',
+      from: 'francis.nduamaka@gmail.com',
+      subject: `New message from <${email}>`,
+      text: briefDescription,
+      html: message
+    };
+
+    const formId = uuidv4();
+    const whenCreated = Date.now();
+
+    const formData = {
+      _id: formId,
+      id: formId,
+      type: 'contactForm',
+      whenCreated,
+      companyName,
+      email,
+      briefDescription,
+      projectType,
+      projectBudget
+    };
+
+    await sgMail.send(mailOptions);
 
     db.insert(formData, (err, result) => {
       if (err) {

@@ -1,7 +1,7 @@
 // import log from 'fancy-log';
 import handleResponse from '../utils/responseHandler';
 import {
-  createEnquiry, uploadResume, applyJob, subscribeBlog
+  createEnquiry, uploadResume, applyJob, subscribeBlog, submitContactForm
 } from '../model/form-dao';
 
 /**
@@ -71,6 +71,22 @@ class FormController {
       .then((result) => {
         const { data, statusCode } = result;
         handleResponse(res, data, statusCode, 'Subscribed successfully');
+      }).catch(err => next(err));
+  }
+
+  /**
+   *
+   * @description Submit the contact form
+   * @static
+   * @param {Request} req - Request Object
+   * @param {Response} res - Response Object
+   * @param {object} next - the next middleware function in the request-response cycle
+   */
+  static contactFormSubmission(req, res, next) {
+    submitContactForm(req.body)
+      .then((result) => {
+        const { data, statusCode } = result;
+        handleResponse(res, data, statusCode, 'Contact form submission successful');
       }).catch(err => next(err));
   }
 }

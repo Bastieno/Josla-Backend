@@ -30,6 +30,7 @@
     "@babel/polyfill": "^7.4.3",
     "@babel/runtime": "^7.4.4",
     "@cloudant/cloudant": "^4.2.1",
+    "@sendgrid/mail": "^7.0.0",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.16.0",
     "compression": "^1.7.4",

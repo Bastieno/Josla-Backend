@@ -28,6 +28,9 @@ router.post('/api/v1/apply-job', [validateApplicationForm], formController.jobAp
 // Route to subcribe to blog
 router.post('/api/v1/subscribe', [validateSubscriberForm], formController.blogSubscription);
 
+// Route to submit the contact form
+router.post('/api/v1/send', formController.contactFormSubmission);
+
 router.all('*', (req, res) => {
   res.status(404).json({
     status: 404,
