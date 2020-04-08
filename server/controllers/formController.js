@@ -1,7 +1,12 @@
 // import log from 'fancy-log';
 import handleResponse from '../utils/responseHandler';
 import {
-  createEnquiry, uploadResume, applyJob, subscribeBlog, submitContactForm
+  createEnquiry,
+  uploadResume,
+  applyJob,
+  subscribeBlog,
+  // submitContactForm,
+  submitContactFormNodeMailer
 } from '../model/form-dao';
 
 /**
@@ -83,7 +88,7 @@ class FormController {
    * @param {object} next - the next middleware function in the request-response cycle
    */
   static contactFormSubmission(req, res, next) {
-    submitContactForm(req.body)
+    submitContactFormNodeMailer(req.body)
       .then((result) => {
         const { data, statusCode } = result;
         handleResponse(res, data, statusCode, 'Contact form submission successful');
